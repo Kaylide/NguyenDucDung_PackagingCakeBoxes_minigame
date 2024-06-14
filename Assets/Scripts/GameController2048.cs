@@ -27,6 +27,7 @@ public class GameController2048 : MonoBehaviour
     public float timeRemaining;
     public Text timeText;
 
+    private Vector2 startTouchPosition;
     private void OnEnable()
     {
         if (instance == null) {
@@ -72,6 +73,52 @@ public class GameController2048 : MonoBehaviour
             ticker = 0;
             isGameOver = 0;
             slide("d");
+        }
+
+        //iOS touch input
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                startTouchPosition = touch.position;
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                Vector2 endTouchPosition = touch.position;
+                float x = endTouchPosition.x - startTouchPosition.x;
+                float y = endTouchPosition.y - startTouchPosition.y;
+                if (Mathf.Abs(x) > Mathf.Abs(y))
+                {
+                    if (x > 0)
+                    {
+                        ticker = 0;
+                        isGameOver = 0;
+                        slide("d");
+                    }
+                    else if (x < 0)
+                    {
+                        ticker = 0;
+                        isGameOver = 0;
+                        slide("a");
+                    }
+                }
+                else
+                {
+                    if (y > 0)
+                    {
+                        ticker = 0;
+                        isGameOver = 0;
+                        slide("w");
+                    }
+                    else if (y < 0)
+                    {
+                        ticker = 0;
+                        isGameOver = 0;
+                        slide("s");
+                    }
+                }
+            }
         }
     }
 
